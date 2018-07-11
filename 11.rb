@@ -1,3 +1,6 @@
+# The product of the diagonal numbers is 26 × 63 × 78 × 14 = 1788696.
+# What is the greatest product of four adjacent numbers in the same direction (up, down, left, right, or diagonally) in the 20×20 grid?
+
 grid = [[8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8],
 [49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 4, 56, 62, 0],
 [81, 49, 31, 73, 55, 79, 14, 29, 93, 71, 40, 67, 53, 88, 30, 03, 49, 13, 36, 65],
@@ -9,27 +12,101 @@ grid = [[8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8]
 [24, 55, 58, 05, 66, 73, 99, 26, 97, 17, 78, 78, 96, 83, 14, 88, 34, 89, 63, 72],
 [21, 36, 23, 9, 75, 0, 76, 44, 20, 45, 35, 14, 0, 61, 33, 97, 34, 31, 33, 95],
 [78, 17, 53, 28, 22, 75, 31, 67, 15, 94, 3, 80, 4, 62, 16, 14, 9, 53, 56, 92],
-[16, 39, 05, 42, 96, 35, 31, 47, 55, 58, 88, 24, 00, 17, 54, 24, 36, 29, 85, 57],
+[16, 39, 5, 42, 96, 35, 31, 47, 55, 58, 88, 24, 0, 17, 54, 24, 36, 29, 85, 57],
 [86, 56, 00, 48, 35, 71, 89, 07, 05, 44, 44, 37, 44, 60, 21, 58, 51, 54, 17, 58],
-[19, 80, 81, 68, 05, 94, 47, 69, 28, 73, 92, 13, 86, 52, 17, 77, 04, 89, 55, 40],
+[19, 80, 81, 68, 05, 94, 47, 69, 28, 73, 92, 13, 86, 52, 17, 77, 4, 89, 55, 40],
 [04, 52, 8, 83, 97, 35, 99, 16, 7, 97, 57, 32, 16, 26, 26, 79, 33, 27, 98, 66],
-[88, 36, 68, 87, 57, 62, 20, 72, 03, 46, 33, 67, 46, 55, 12, 32, 63, 93, 53, 69],
+[88, 36, 68, 87, 57, 62, 20, 72, 3, 46, 33, 67, 46, 55, 12, 32, 63, 93, 53, 69],
+[4, 42, 16, 73, 38, 25, 39, 11, 24, 94, 72, 18, 8, 46, 29, 32, 40, 62, 76, 36],
 [20, 69, 36, 41, 72, 30, 23, 88, 34, 62, 99, 69, 82, 67, 59, 85, 74, 4, 36, 16],
 [20, 73, 35, 29, 78, 31, 90, 1, 74, 31, 49, 71, 48, 86, 81, 16, 23, 57, 5, 54],
 [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 01, 89, 19, 67, 48]]
 
-def multiply_up(num)
-    num * grid[row_num-1][column_num-1] * grid[row_num-2][column_num-2] * grid[row_num-3][column_num-3]    
-end
+# Four Adjacent Numbers in Same Direction:
+# From Any Index Num:
+## UP = [0, -20, -40, -60]
+## DOWN = [0, 20, 40, 60]
+## RIGHT = [0, 1, 2, 3]
+## UP-RIGHT = [0, -19, -38, -57]
+## DOWN-RIGHT = [0, 21, 42, 63]
 
-row_num = 0
-column_num = 0
 
-# iterate each row
-until count == 20
-    grid[row].each do |num|
-        [num]
-        row_num += 1
-        column_num += 1
+
+
+def largest_product_grid(grid)
+    highest_product_combo = []
+    highest_product = 1
+    grid.each_with_index do |row, i|
+        if i < 3
+            row.each_with_index do |item, j|
+                if j < 17
+                    right = [row[j], row[j + 1], row[j + 2], row[j + 3]]
+                    down = [row[j], grid[i + 1][j], grid[i + 2][j], grid[i + 3][j]]
+                    down_right = [row[j], grid[i + 1][j + 1], grid[i + 2][j + 2], grid[i + 3][j + 3]]
+
+                    if right.inject(:*) > highest_product
+                        highest_product = right.inject(:*)
+                        highest_product_combo = right
+                    elsif down.inject(:*) > highest_product
+                        highest_product = down.inject(:*)
+                        highest_product_combo = down
+                    elsif down_right.inject(:*) > highest_product
+                        highest_product = down_right.inject(:*)
+                        highest_product_combo = down_right
+                    end
+                else
+                end
+            end
+        elsif i >= 3 && i < 17
+            row.each_with_index do |item, j|
+                if j < 17
+                    right = [row[j], row[j + 1], row[j + 2], row[j + 3]]
+                    down = [row[j], grid[i + 1][j], grid[i + 2][j], grid[i + 3][j]]
+                    down_right = [row[j], grid[i + 1][j + 1], grid[i + 2][j + 2], grid[i + 3][j + 3]]
+                    up = [row[j], grid[i - 1][j], grid[i - 2][j], grid[i - 3][j]]
+                    up_right = [row[j], grid[i - 1][j + 1], grid[i - 2][j + 2], grid[i - 3][j + 3]]
+
+                    if right.inject(:*) > highest_product
+                        highest_product = right.inject(:*)
+                        highest_product_combo = right
+                    elsif down.inject(:*) > highest_product
+                        highest_product = down.inject(:*)
+                        highest_product_combo = down
+                    elsif down_right.inject(:*) > highest_product
+                        highest_product = down_right.inject(:*)
+                        highest_product_combo = down_right
+                    elsif up.inject(:*) > highest_product
+                        highest_product = up.inject(:*)
+                        highest_product_combo = up
+                    elsif up_right.inject(:*) > highest_product
+                        highest_product = up_right.inject(:*)
+                        highest_product_combo = up_right
+                    end
+                else
+                end
+            end
+        elsif i > 16
+            row.each_with_index do |item, j|
+                if j < 17
+                    right = [row[j], row[j + 1], row[j + 2], row[j + 3]]
+                    up = [row[j], grid[i - 1][j], grid[i - 2][j], grid[i - 3][j]]
+                    up_right = [row[j], grid[i - 1][j + 1], grid[i - 2][j + 2], grid[i - 3][j + 3]]
+                    if right.inject(:*) > highest_product
+                        highest_product = right.inject(:*)
+                        highest_product_combo = right
+                    elsif up.inject(:*) > highest_product
+                        highest_product = up.inject(:*)
+                        highest_product_combo = up
+                    elsif up_right.inject(:*) > highest_product
+                        highest_product = up_right.inject(:*)
+                        highest_product_combo = up_right
+                    end
+                else
+                end
+            end
+        end
     end
+    return highest_product
 end
+
+puts largest_product_grid(grid)
